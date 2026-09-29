@@ -1,0 +1,117 @@
+/*
+ * Identidade visual do guia.
+ * Cores e tipografia centralizadas aqui — não defina cores de marca em outros arquivos.
+ */
+
+:root {
+  --brand-green: #00754a;
+  --brand-green-dark-1: #006241;
+  --brand-green-dark-2: #17392f;
+  --brand-orange: #ef8943;
+
+  --md-text-font: "Gotham", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --md-code-font: "Cascadia Code", Consolas, "Roboto Mono", monospace;
+}
+
+/* Tema claro */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: var(--brand-green);
+  --md-primary-fg-color--light: #2f8f6b;
+  --md-primary-fg-color--dark: var(--brand-green-dark-1);
+  --md-primary-bg-color: #ffffff;
+  --md-accent-fg-color: var(--brand-orange);
+  --md-accent-fg-color--transparent: rgba(239, 137, 67, 0.1);
+  --md-typeset-a-color: var(--brand-green);
+}
+
+/* Tema escuro */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: var(--brand-green-dark-2);
+  --md-primary-fg-color--light: var(--brand-green);
+  --md-primary-fg-color--dark: #10281f;
+  --md-primary-bg-color: #ffffff;
+  --md-accent-fg-color: var(--brand-orange);
+  --md-accent-fg-color--transparent: rgba(239, 137, 67, 0.12);
+  --md-default-bg-color: #13241e;
+  --md-code-bg-color: #1a2f28;
+  --md-footer-bg-color: #10281f;
+  --md-footer-bg-color--dark: #0c1f18;
+  --md-typeset-a-color: #4fbf8f;
+}
+
+/* Tipografia */
+.md-typeset h1,
+.md-typeset h2 {
+  font-weight: 700;
+  color: var(--md-primary-fg-color);
+}
+
+[data-md-color-scheme="slate"] .md-typeset h1,
+[data-md-color-scheme="slate"] .md-typeset h2 {
+  color: #e6efe9;
+}
+
+.md-typeset h2 {
+  border-bottom: 2px solid var(--brand-orange);
+  padding-bottom: 0.2em;
+}
+
+.md-typeset a:hover {
+  color: var(--brand-orange);
+}
+
+/* Tabelas */
+.md-typeset table:not([class]) th {
+  background-color: var(--brand-green);
+  color: #ffffff;
+}
+
+/* Hero da página inicial com pattern de círculos e quadrados */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0.4rem;
+  background-color: var(--brand-green-dark-2);
+  color: #ffffff;
+  background-image:
+    radial-gradient(circle at 88% 22%, var(--brand-orange) 0 18px, transparent 19px),
+    radial-gradient(circle at 96% 78%, var(--brand-green) 0 34px, transparent 35px),
+    linear-gradient(var(--brand-green-dark-1), var(--brand-green-dark-1)),
+    linear-gradient(var(--brand-orange), var(--brand-orange));
+  background-size: auto, auto, 44px 44px, 18px 18px;
+  background-position: 0 0, 0 0, 78% 70%, 70% 18%;
+  background-repeat: no-repeat;
+}
+
+.md-typeset .hero h1 {
+  color: #ffffff;
+  margin-bottom: 0.4em;
+  max-width: 75%;
+}
+
+.md-typeset .hero p {
+  max-width: 70%;
+  margin: 0;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .hero h1,
+  .md-typeset .hero p {
+    max-width: 100%;
+  }
+
+  .hero {
+    background-image: none;
+  }
+}
+
+/* Cards (grid) */
+.md-typeset .grid.cards > ul > li {
+  border-top: 3px solid var(--brand-green);
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  border-top-color: var(--brand-orange);
+}
