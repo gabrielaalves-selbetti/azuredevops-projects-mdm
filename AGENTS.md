@@ -4,7 +4,7 @@ Orientações para agentes de IA que trabalham neste repositório.
 
 ## O que estamos desenvolvendo
 
-Um **guia de padronização do uso do Azure DevOps** (Azure Boards e Azure Repos), publicado como site MkDocs Material. O público é experiente: o guia define convenções, não ensina a ferramenta. Ele cobre o ciclo completo de um novo recurso:
+Um **guia de padronização do uso do Azure DevOps** (Azure Boards e Azure Repos), publicado como site MkDocs Material. O público é experiente em dados, mas tem pouca vivência com DevOps e DataOps: o guia define convenções e explica cada termo de Git ou de fluxo em uma frase na primeira ocorrência, sem virar tutorial da ferramenta. Não mencione o nível de experiência do leitor nos textos publicados. Ele cobre o ciclo completo de um novo recurso:
 
 entrega → work items → board → branch → commits → pull request → code review → homologação → merge.
 
@@ -35,7 +35,8 @@ O foco é integração da equipe e rastreabilidade das tarefas. O estado no boar
 | `docs/index.md` | Página inicial: propósito do guia e contexto MDM |
 | `docs/fundamentos.md` | DevOps/DataOps, propósito de cada recurso do Azure DevOps, riscos do MDM, estratégia de branches, dados pessoais |
 | `docs/azure-devops/` | Visão geral (etapas do board), configuração do projeto e do processo, entregas, work items, branches e commits, pull requests |
-| `docs/assets/stylesheets/brand.css` | **Única** fonte de cores e tipografia |
+| `docs/assets/stylesheets/brand.css` | **Única** fonte de cores e tipografia. Define o componente `.trilho` (etapas do board) |
+| `includes/abreviacoes.md` | Glossário: termos exibidos como tooltip em todas as páginas (`abbr` + `pymdownx.snippets`) |
 | `resources/` | Brand book de referência. Material interno, **não publicado** |
 | `.claude/skills/mkdocs-docs/` | Skill com as regras de escrita de páginas |
 

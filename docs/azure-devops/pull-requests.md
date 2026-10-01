@@ -1,6 +1,6 @@
 # Pull requests
 
-O pull request (PR) é o ponto de revisão e o gatilho de entrega. Ele deve estar vinculado ao work item que resolve, bem descrito e pronto para revisão.
+O pull request (PR) é o pedido para integrar uma branch a outra. É nele que o código é revisado antes de entrar na `dev` e, depois de homologado, na `main`. Ele deve estar vinculado ao work item que resolve, bem descrito e pronto para revisão.
 
 ## Título
 
@@ -52,7 +52,12 @@ Salve o modelo em `.azuredevops/pull_request_template.md` na `dev` e na `main`. 
 | `task/<id>` → `dev` | A tarefa está pronta para code review | Code review do work item | **Squash commit** |
 | `dev` → `main` | Os itens da `dev` estão homologados | Conferência dos itens incluídos | **Merge (no fast-forward)** |
 
-O PR `dev` → `main` usa merge sem squash. O squash reescreveria os commits da `dev` e geraria conflitos na promoção seguinte.
+- **Squash commit**: todos os commits da tarefa viram um único commit na `dev`. O histórico da `dev` fica com um commit por tarefa, fácil de ler e de reverter.
+- **Merge (no fast-forward)**: mantém os commits da `dev` como estão e acrescenta um commit de merge, que marca a promoção na `main`.
+
+O PR `dev` → `main` não usa squash. O squash criaria na `main` um commit que não existe na `dev`, e as duas branches entrariam em conflito na promoção seguinte.
+
+As opções de conclusão de cada PR estão em [Merge](#merge).
 
 ## Vínculo com o work item
 
@@ -70,6 +75,8 @@ O work item é vinculado ao PR na seção **Work items** do PR. O vínculo é au
 
 ## PR e status no board
 
+O PR não move o work item: quem executa a ação atualiza o **State**. O significado de cada estado está em [Etapas do board](index.md#etapas-do-board).
+
 | Ação | Quem move o item | Novo status |
 | :--- | :--- | :--- |
 | Publica o PR `task/<id>` → `dev` (**Publish**) | Autor | **Waiting** |
@@ -78,7 +85,7 @@ O work item é vinculado ao PR na seção **Work items** do PR. O vínculo é au
 | Reprovado na homologação | Responsável pela homologação | **Doing** |
 | PR `dev` → `main` concluído | Quem conclui o PR | **Done** |
 
-- Crie o PR como rascunho (**Create as draft**) cedo, para dar visibilidade ao trabalho.
+- Crie o PR como rascunho (**Create as draft**) cedo, para dar visibilidade ao trabalho. O rascunho mostra o código à equipe, mas ainda não pede revisão.
 - Publique o PR somente quando ele estiver completo e os testes passarem localmente.
 
 === "Interface web"
@@ -100,6 +107,7 @@ O work item é vinculado ao PR na seção **Work items** do PR. O vínculo é au
 
     1. Vincula o work item `#123` ao PR.
     2. Publica o PR para revisão. O ID do PR é retornado pelo comando anterior.
+
 ## Revisão
 
 ### Responsabilidades do autor
@@ -139,7 +147,7 @@ O work item é vinculado ao PR na seção **Work items** do PR. O vínculo é au
 
 ### Revisores por caminho
 
-O Azure Repos não usa arquivo `CODEOWNERS`. Os revisores obrigatórios por pasta são definidos na branch policy **Automatically included reviewers** da `main`, com filtro de caminho:
+Os revisores obrigatórios por pasta são definidos na branch policy **Automatically included reviewers** da `dev`, com filtro de caminho. Quem altera uma pasta recebe automaticamente os revisores responsáveis por ela. A configuração é feita por quem administra o repositório:
 
 | Caminho | Revisores | Obrigatório |
 | :--- | :--- | :--- |
@@ -156,7 +164,7 @@ A homologação é a validação funcional contra os **critérios de aceitação
 2. O responsável pela homologação valida cada critério de aceitação e compara as métricas com a execução anterior.
 3. Resultado:
     - **Aprovado**: o responsável registra a homologação na **Discussion** do work item. O item segue em **Homologate** até a promoção para a `main`.
-    - **Reprovado**: o responsável descreve o problema na **Discussion** e move o item para **Doing**. A correção é feita em nova `task/<id>`. Se não for imediata, reverta o PR na `dev` (**Revert**) para não bloquear a promoção.
+    - **Reprovado**: o responsável descreve o problema na **Discussion** e move o item para **Doing**. A correção é feita em uma nova `task/<id>`, recriada a partir da `dev`, pois a anterior foi excluída no merge. Se não for imediata, reverta o PR na `dev` (**Revert**) para não bloquear a promoção.
 
 | Métrica | Uso |
 | :--- | :--- |
@@ -181,6 +189,8 @@ Golden Records: sem variação.
 
 ## Branch policies
 
+As branch policies são regras que o Azure Repos aplica a uma branch: sem atendê-las, o PR não pode ser concluído. Elas garantem que nenhum código entre na `dev` ou na `main` sem revisão e sem work item. A configuração é feita uma vez, por quem administra o repositório.
+
 Configure em **Project settings** → **Repositories** → `mdm-hub` → **Policies**, nas branches `dev` e `main`:
 
 | Policy | `dev` | `main` |
@@ -192,23 +202,25 @@ Configure em **Project settings** → **Repositories** → `mdm-hub` → **Polic
 | **Limit merge types** | Somente **Squash merge** | Somente **Basic merge (no fast-forward)** |
 | **Automatically included reviewers** | Conforme [Revisores por caminho](#revisores-por-caminho) | Líderes técnicos |
 
-Em **Security** das branches `dev` e `main`, negue (**Deny**) a permissão **Force push** para todos os grupos.
+Em **Security** das branches `dev` e `main`, negue (**Deny**) a permissão **Force push** para todos os grupos. O force push sobrescreve o histórico da branch no servidor e só é aceito em `task/<id>`.
 
 !!! info "Configurações do repositório"
     Na aba **Settings** do repositório, mantenha **Commit mention linking** ativo, para vincular commits que mencionam `#123`.
 
 ## Merge
 
-| PR | Tipo de merge | Opções de conclusão |
-| :--- | :--- | :--- |
-| `task/<id>` → `dev` | **Squash commit**, com mensagem no padrão de [commits](branches-e-commits.md#padrao-de-commits) | Marque **Delete `<branch>` after merging**. Deixe desmarcada **Complete linked work items after merging** |
-| `dev` → `main` | **Merge (no fast-forward)** | Deixe desmarcada **Delete `<branch>` after merging**: a `dev` é permanente |
+O tipo de merge de cada PR está em [Tipos de pull request](#tipos-de-pull-request). Ao concluir, ajuste as opções:
+
+| PR | Opções de conclusão |
+| :--- | :--- |
+| `task/<id>` → `dev` | Mensagem do squash no padrão de [commits](branches-e-commits.md#padrao-de-commits). Marque **Delete `<branch>` after merging**. Deixe desmarcada **Complete linked work items after merging** |
+| `dev` → `main` | Deixe desmarcada **Delete `<branch>` after merging**: a `dev` é permanente |
 
 Promova a `dev` para a `main` somente quando todos os itens da `dev` estiverem homologados. Após a conclusão, quem promoveu move os itens incluídos para **Done**.
 
 === "Interface web"
 
-    No PR, clique em **Complete**, escolha o tipo de merge da tabela e ajuste as opções de conclusão. No squash, edite a mensagem em **Customize merge commit message**.
+    No PR, clique em **Complete**, escolha o tipo de merge e ajuste as opções de conclusão. No squash, edite a mensagem em **Customize merge commit message**.
 
 === "az CLI"
 

@@ -23,6 +23,9 @@ theme:
         icon: material/weather-sunny
         name: Modo claro
   features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
     - navigation.tabs
     - navigation.sections
     - navigation.top
@@ -31,9 +34,11 @@ theme:
     - toc.follow
     - search.suggest
     - search.highlight
+    - search.share
     - content.code.copy
     - content.code.annotate
     - content.tabs.link
+    - content.tooltips
 
 extra_css:
   - assets/stylesheets/brand.css
@@ -64,8 +69,12 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.keys
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abreviacoes.md
   - pymdownx.tasklist:
       custom_checkbox: true
+      clickable_checkbox: true
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.superfences:

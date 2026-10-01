@@ -30,6 +30,17 @@ Referências:
 - Regras e comparações em tabelas e listas.
 - Sem exageros, termos genéricos ou promessas vagas. Não use emojis no texto corrido.
 
+## Clareza
+
+O leitor domina dados, mas tem pouca vivência com Git e DevOps. Não mencione isso no texto.
+
+- Explique cada termo de Git ou de fluxo em uma frase na primeira ocorrência da página (squash, rebase, hook, branch policy).
+- Termos recorrentes ficam em `includes/abreviacoes.md` e aparecem como tooltip em todas as páginas. Ao usar um termo novo, adicione-o ali.
+- Todo comando `git` ou `az` leva anotação `(1)!` dizendo o que faz.
+- Detalhe de referência ou de exceção vai em bloco recolhido (`???`).
+- Cada regra tem uma página dona. As demais apontam para ela, sem repetir.
+- As etapas do board usam o componente `<ol class="trilho">` (veja `docs/azure-devops/index.md`), definido em `brand.css`.
+
 ## Admonitions
 
 Habilitadas via `admonition` + `pymdownx.details`.

@@ -7,7 +7,10 @@
   --brand-green: #00754a;
   --brand-green-dark-1: #006241;
   --brand-green-dark-2: #17392f;
+  --brand-green-light: #4fbf8f;
   --brand-orange: #ef8943;
+  --brand-white: #ffffff;
+  --brand-ink-inverse: #e6efe9;
 
   --md-text-font: "Gotham", "Segoe UI", system-ui, -apple-system, sans-serif;
   --md-code-font: "Cascadia Code", Consolas, "Roboto Mono", monospace;
@@ -18,10 +21,11 @@
   --md-primary-fg-color: var(--brand-green);
   --md-primary-fg-color--light: #2f8f6b;
   --md-primary-fg-color--dark: var(--brand-green-dark-1);
-  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color: var(--brand-white);
   --md-accent-fg-color: var(--brand-orange);
   --md-accent-fg-color--transparent: rgba(239, 137, 67, 0.1);
   --md-typeset-a-color: var(--brand-green);
+  --table-head-bg: var(--brand-green);
 }
 
 /* Tema escuro */
@@ -29,14 +33,15 @@
   --md-primary-fg-color: var(--brand-green-dark-2);
   --md-primary-fg-color--light: var(--brand-green);
   --md-primary-fg-color--dark: #10281f;
-  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color: var(--brand-white);
   --md-accent-fg-color: var(--brand-orange);
   --md-accent-fg-color--transparent: rgba(239, 137, 67, 0.12);
   --md-default-bg-color: #13241e;
   --md-code-bg-color: #1a2f28;
   --md-footer-bg-color: #10281f;
   --md-footer-bg-color--dark: #0c1f18;
-  --md-typeset-a-color: #4fbf8f;
+  --md-typeset-a-color: var(--brand-green-light);
+  --table-head-bg: var(--brand-green-dark-1);
 }
 
 /* Tipografia */
@@ -48,7 +53,7 @@
 
 [data-md-color-scheme="slate"] .md-typeset h1,
 [data-md-color-scheme="slate"] .md-typeset h2 {
-  color: #e6efe9;
+  color: var(--brand-ink-inverse);
 }
 
 .md-typeset h2 {
@@ -60,50 +65,132 @@
   color: var(--brand-orange);
 }
 
-/* Tabelas */
-.md-typeset table:not([class]) th {
-  background-color: var(--brand-green);
-  color: #ffffff;
+/* Foco de teclado */
+.md-typeset a:focus-visible,
+.md-nav__link:focus-visible,
+.md-tabs__link:focus-visible {
+  outline: 2px solid var(--brand-orange);
+  outline-offset: 2px;
+  border-radius: 0.1rem;
 }
 
-/* Hero da página inicial com pattern de círculos e quadrados */
+/* Termos do glossário (tooltip) */
+.md-typeset abbr {
+  border-bottom: 1px dotted var(--brand-orange);
+  text-decoration: none;
+  cursor: help;
+}
+
+/* Abas de conteúdo */
+.md-typeset .tabbed-set {
+  --md-indicator-color: var(--brand-orange);
+}
+
+.js .md-typeset .tabbed-labels::before {
+  background: var(--brand-orange);
+}
+
+/* Tabelas */
+.md-typeset table:not([class]) th {
+  background-color: var(--table-head-bg);
+  color: var(--brand-white);
+}
+
+.md-typeset table:not([class]) td:first-child code {
+  white-space: nowrap;
+}
+
+/* Hero da página inicial */
 .hero {
-  position: relative;
-  overflow: hidden;
-  padding: 2rem 1.5rem;
+  padding: 2rem 1.5rem 1.5rem;
   margin-bottom: 1.5rem;
   border-radius: 0.4rem;
   background-color: var(--brand-green-dark-2);
-  color: #ffffff;
-  background-image:
-    radial-gradient(circle at 88% 22%, var(--brand-orange) 0 18px, transparent 19px),
-    radial-gradient(circle at 96% 78%, var(--brand-green) 0 34px, transparent 35px),
-    linear-gradient(var(--brand-green-dark-1), var(--brand-green-dark-1)),
-    linear-gradient(var(--brand-orange), var(--brand-orange));
-  background-size: auto, auto, 44px 44px, 18px 18px;
-  background-position: 0 0, 0 0, 78% 70%, 70% 18%;
-  background-repeat: no-repeat;
+  color: var(--brand-white);
 }
 
 .md-typeset .hero h1 {
-  color: #ffffff;
+  color: var(--brand-white);
   margin-bottom: 0.4em;
-  max-width: 75%;
 }
 
 .md-typeset .hero p {
-  max-width: 70%;
+  max-width: 44rem;
   margin: 0;
 }
 
+/* Trilho de etapas do board: Backlog → Done, com Homologate em destaque */
+.md-typeset ol.trilho {
+  --trilho-seta: 0.6rem;
+  --trilho-inicio: var(--brand-green-dark-2);
+  display: flex;
+  gap: 0.15rem;
+  margin: 1.2rem 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.md-typeset ol.trilho li {
+  flex: 1 1 0;
+  margin: 0;
+  padding: 0.55rem 0.4rem 0.55rem calc(0.4rem + var(--trilho-seta));
+  text-align: center;
+  white-space: nowrap;
+  color: var(--brand-white);
+  background-color: var(--brand-green-dark-1);
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--trilho-seta)) 0,
+    100% 50%,
+    calc(100% - var(--trilho-seta)) 100%,
+    0 100%,
+    var(--trilho-seta) 50%
+  );
+}
+
+.md-typeset ol.trilho li:first-child {
+  padding-left: 0.4rem;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--trilho-seta)) 0,
+    100% 50%,
+    calc(100% - var(--trilho-seta)) 100%,
+    0 100%
+  );
+}
+
+.md-typeset ol.trilho li:nth-child(-n + 2) {
+  background-color: var(--trilho-inicio);
+}
+
+.md-typeset ol.trilho li.trilho__controle {
+  background-color: var(--brand-orange);
+  color: var(--brand-green-dark-2);
+}
+
+.md-typeset ol.trilho li:last-child {
+  background-color: var(--brand-green);
+}
+
+.md-typeset .hero ol.trilho {
+  --trilho-inicio: rgba(255, 255, 255, 0.16);
+  margin: 1.5rem 0 0;
+}
+
 @media screen and (max-width: 44.9375em) {
-  .md-typeset .hero h1,
-  .md-typeset .hero p {
-    max-width: 100%;
+  .md-typeset ol.trilho {
+    flex-direction: column;
   }
 
-  .hero {
-    background-image: none;
+  .md-typeset ol.trilho li,
+  .md-typeset ol.trilho li:first-child {
+    padding: 0.4rem 0.8rem;
+    text-align: left;
+    clip-path: none;
+    border-radius: 0.15rem;
   }
 }
 
@@ -112,6 +199,7 @@
   border-top: 3px solid var(--brand-green);
 }
 
-.md-typeset .grid.cards > ul > li:hover {
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid.cards > ul > li:focus-within {
   border-top-color: var(--brand-orange);
 }

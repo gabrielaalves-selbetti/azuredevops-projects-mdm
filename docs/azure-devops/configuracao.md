@@ -2,6 +2,9 @@
 
 Padrão sugerido para os projetos da equipe no Azure DevOps. Parta dele e ajuste apenas o necessário.
 
+!!! info "Feita uma vez, por quem administra"
+    Esta página é usada na criação do projeto. Para o trabalho do dia a dia, siga para [Entregas](entregas.md) e [Work items](work-items.md).
+
 ## Padrão sugerido
 
 | Item | Padrão |
@@ -21,15 +24,18 @@ Padrão sugerido para os projetos da equipe no Azure DevOps. Parta dele e ajuste
 
     ```bash title="Projeto, repositório e branch dev"
     az devops configure --defaults \
-      organization=https://dev.azure.com/minha-org project="Dados - MDM"
+      organization=https://dev.azure.com/minha-org project="Dados - MDM"   # (1)!
     az devops project create --name "Dados - MDM" --process "Agile MDM"
     az repos create --name mdm-hub
-    git push origin main:dev
+    git push origin main:dev   # (2)!
     ```
+
+    1. Define a organização e o projeto padrão. Os próximos comandos `az` não precisam repeti-los.
+    2. Cria a `dev` no servidor como cópia da `main`. Execute no repositório local, depois do primeiro push da `main`.
 
 ## Processo
 
-O processo é criado uma vez, em **Organization settings** → **Process**, por um administrador da organização.
+O processo define os tipos de work item, os campos e os estados disponíveis no projeto. O **processo herdado** é uma cópia customizável do processo Agile padrão. Ele é criado uma vez, em **Organization settings** → **Process**, por um administrador da organização, e vale para todos os projetos que o usam.
 
 | Tipo de work item | Uso |
 | :--- | :--- |
@@ -50,6 +56,8 @@ Em **User Story** e **Bug**, crie os estados abaixo e oculte os herdados (**New*
 | **Homologate** | In Progress |
 | **Done** | Completed |
 
+A categoria informa ao Azure Boards como tratar cada estado: **Proposed** é trabalho não iniciado, **In Progress** é trabalho em andamento e **Completed** é trabalho concluído. Os gráficos e o progresso das entregas usam a categoria, não o nome do estado.
+
 !!! warning "Nomes definitivos"
     Nomes de estados customizados não podem ser alterados depois de criados. Confira a grafia antes de salvar.
 
@@ -68,8 +76,8 @@ Valores sugeridos. A equipe pode ajustá-los, desde que use o mesmo padrão em t
 
 | Visão | Configuração |
 | :--- | :--- |
-| **Board** (nível Stories) | Uma coluna por estado. **WIP limit** em **Doing**, **Waiting** e **Homologate** |
-| **Backlog de Entregas** | Colunas Target Date e **Progress by all Work Items** |
+| **Board** (nível Stories) | Uma coluna por estado. **WIP limit** (máximo de itens na coluna) em **Doing**, **Waiting** e **Homologate** |
+| **Backlog de Entregas** | Colunas Target Date e **Progress by all Work Items** (barra com o percentual de filhos concluídos) |
 | **Delivery Plan** | Entregas no tempo, por Start Date e Target Date |
 | **Queries compartilhadas** | `State = Waiting` (revisão), `State = Homologate` (homologação), `Assigned To = @Me` (minhas tarefas) |
 

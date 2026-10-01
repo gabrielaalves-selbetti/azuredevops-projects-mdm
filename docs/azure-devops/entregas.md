@@ -29,6 +29,8 @@ O backlog **Entregas** mostra o progresso de cada entrega pela coluna de rollup 
 
 ## Limite de trabalho em andamento
 
+O limite de WIP é o número máximo de itens que uma coluna pode ter ao mesmo tempo. Ele evita que a equipe inicie mais trabalho do que consegue revisar e homologar: um item parado em revisão não entrega valor e se distancia da `dev` a cada dia.
+
 Os limites são configurados no board, em cada coluna (**WIP limit**). O board destaca a coluna quando o limite é ultrapassado.
 
 | Coluna | Limite de referência |
@@ -58,7 +60,15 @@ Mova o work item de entrega para o estado concluído. Itens de escopo não concl
 
 ### Versionamento
 
-Cada entrega publicada gera uma **tag anotada** na `main` do Azure Repos, após a promoção da `dev`, no padrão [SemVer](https://semver.org/lang/pt-BR/) `vMAJOR.MINOR.PATCH`. O tipo dos commits indica qual número sobe:
+Cada entrega publicada gera uma **tag anotada** na `main` do Azure Repos, após a promoção da `dev`. A tag é uma etiqueta fixa em um ponto do histórico. A tag anotada guarda também autor, data e mensagem.
+
+O nome da tag segue o padrão [SemVer](https://semver.org/lang/pt-BR/) `vMAJOR.MINOR.PATCH`. Cada número indica o tamanho da mudança para quem consome o MDM:
+
+- **PATCH**: correção. Nada muda para os consumidores.
+- **MINOR**: regra ou funcionalidade nova, compatível com o que já existia.
+- **MAJOR**: mudança incompatível. Origens ou consumidores precisam se adaptar.
+
+O tipo dos [commits](branches-e-commits.md#padrao-de-commits) indica qual número sobe:
 
 | Commits na entrega | Versão | Exemplo |
 | :--- | :--- | :--- |
@@ -67,10 +77,14 @@ Cada entrega publicada gera uma **tag anotada** na `main` do Azure Repos, após 
 | Mudança incompatível (`!`), como novo layout das views de ingestão | MAJOR | `v1.4.0` → `v2.0.0` |
 
 ```bash title="Tag da entrega"
-git switch main && git pull
-git tag -a v1.5.0 -m "Entrega #120: Unificação de pessoas físicas"
-git push origin v1.5.0
+git switch main && git pull   # (1)!
+git tag -a v1.5.0 -m "Entrega #120: Unificação de pessoas físicas"   # (2)!
+git push origin v1.5.0   # (3)!
 ```
+
+1. Vai para a `main` e baixa a versão mais recente, já com a promoção da `dev`.
+2. Cria a tag anotada (`-a`) no commit atual, com a mensagem informada em `-m`.
+3. Envia a tag ao Azure Repos. O `git push` comum não envia tags.
 
 - A mensagem da tag referencia o work item de entrega. Registre as notas da versão (pull requests incluídos) na **Discussion** da entrega.
 - A imagem Docker publicada recebe a mesma versão e o hash do commit (ex.: `mdm-airflow:1.5.0` e `mdm-airflow:a1b2c3d`).
@@ -88,8 +102,8 @@ Mantenha um **Dashboard** do time com os seguintes widgets:
 | **Chart for work items** | Query de User Stories e Bugs com `State <> Done`, gráfico de barras por State | Em qual etapa o trabalho está parado? |
 | **Chart for work items** | Query de árvore (Parent/Child) das entregas abertas, barras empilhadas por State | Qual entrega está atrasada? |
 | **Chart for work items** | Query com `State <> Done`, barras por Assigned To | A carga está equilibrada? |
-| **Cumulative Flow Diagram** | Backlog **Stories** | Onde o fluxo acumula? |
-| **Cycle Time** | Backlog **Stories** | O ritmo de conclusão é estável? |
+| **Cumulative Flow Diagram** | Backlog **Stories** | Onde o fluxo acumula? Cada faixa é um estado: a faixa que engrossa indica a etapa que acumula itens |
+| **Cycle Time** | Backlog **Stories** | O ritmo de conclusão é estável? Cada ponto é um item e mostra quantos dias ele levou do início à conclusão |
 
 !!! info "Métricas são da equipe"
     Os gráficos avaliam o fluxo de trabalho, não o desempenho individual.

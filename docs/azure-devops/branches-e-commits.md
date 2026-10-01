@@ -14,13 +14,11 @@ O `<id>` é o ID do work item: a tarefa `#123` usa a branch `task/123`.
 
 ## Fluxo de uma tarefa
 
-Toda tarefa passa pela `dev` antes de chegar à `main`.
-
 ```mermaid
 flowchart LR
     DEV1["dev"] -->|"1. cria a branch"| T["task/123"]
-    T -->|"2. PR + code review"| DEV2["dev<br/>ambiente de homologação"]
-    DEV2 -->|"3. homologação aprovada<br/>PR dev → main"| MAIN["main<br/>produção (tag)"]
+    T -->|"2. PR + code review<br/>3. merge na dev"| DEV2["dev<br/>ambiente de homologação"]
+    DEV2 -->|"4. homologação aprovada<br/>PR dev → main"| MAIN["main<br/>produção (tag)"]
     DEV2 -.->|"reprovado: correção<br/>em nova task/123"| T
 ```
 
@@ -28,8 +26,10 @@ flowchart LR
 | :--- | :--- | :--- |
 | 1 | Cria `task/123` a partir da `dev` atualizada | **Doing** |
 | 2 | Publica o PR `task/123` → `dev` para code review | **Waiting** |
-| 2 | PR aprovado e concluído na `dev` | **Homologate** |
-| 3 | Homologação aprovada e PR `dev` → `main` concluído | **Done** |
+| 3 | PR aprovado e concluído na `dev` | **Homologate** |
+| 4 | Homologação aprovada e PR `dev` → `main` concluído | **Done** |
+
+Se a homologação reprovar a mudança, a branch `task/123` já foi excluída no merge. Recrie-a a partir da `dev` para fazer a correção.
 
 ### Regras
 
@@ -61,10 +61,14 @@ flowchart LR
 === "az CLI"
 
     ```bash title="Branch a partir da dev"
-    git fetch origin
-    git switch -c task/123 origin/dev
-    git push -u origin task/123
+    git fetch origin   # (1)!
+    git switch -c task/123 origin/dev   # (2)!
+    git push -u origin task/123   # (3)!
     ```
+
+    1. Baixa o estado mais recente do servidor, sem alterar os arquivos locais.
+    2. Cria a branch `task/123` a partir da `dev` do servidor e passa a trabalhar nela.
+    3. Envia a branch ao Azure Repos. O `-u` liga a branch local à remota: os próximos envios usam apenas `git push`.
 
     A branch criada pelo terminal é vinculada ao work item pela menção `#123` nos commits e pelo pull request.
 
@@ -85,6 +89,17 @@ test(matching): cobre caso de gêmeos com mesmo CPF
 chore(deps): atualiza Airflow para 3.0.6
 ci(infra): publica imagem com tag do commit
 feat(ingestao)!: altera layout da view de pessoa
+```
+
+A primeira linha é o título. O corpo, separado por uma linha em branco, explica o motivo e referencia o work item:
+
+```text title="Commit completo"
+feat(higienizacao): valida dígito verificador de CPF
+
+CPFs com DV incorreto passam a ir para a fila de inválidos.
+Efeito esperado: aumento de inválidos nas origens de cadastro manual.
+
+Refs #123
 ```
 
 | Tipo | Uso | Versão |
@@ -113,7 +128,7 @@ O **escopo** é o último nível do [Area Path](configuracao.md#campos) em minú
 
 ### Verificações antes do commit
 
-Os repositórios usam [pre-commit](https://pre-commit.com/) para rodar formatação e lint (Ruff) antes de cada commit. Instale os hooks ao clonar o repositório:
+Os repositórios usam [pre-commit](https://pre-commit.com/) para rodar formatação e lint (Ruff) antes de cada commit. O hook é um script que o Git executa sozinho: se a verificação falhar, o commit não é criado. Instale os hooks uma vez, ao clonar o repositório:
 
 ```bash title="Instalação dos hooks"
 uv run pre-commit install
@@ -124,10 +139,27 @@ uv run pre-commit install
 
 ## Mantendo a branch atualizada
 
+Enquanto a tarefa está em desenvolvimento, outras tarefas entram na `dev`. O rebase reaplica os commits da sua branch sobre a `dev` mais recente, para que o pull request contenha apenas a sua mudança e os conflitos sejam resolvidos antes da revisão.
+
 ```bash title="Atualização com a dev"
-git fetch origin
-git rebase origin/dev
-git push --force-with-lease   # (1)!
+git fetch origin   # (1)!
+git rebase origin/dev   # (2)!
+git push --force-with-lease   # (3)!
 ```
 
-1. `--force-with-lease` recusa o push se alguém tiver enviado commits à branch que você ainda não tem. O force push é permitido apenas em `task/<id>`, nunca na `dev` ou na `main`.
+1. Baixa o estado mais recente da `dev`.
+2. Reaplica os commits da `task/123` sobre a `dev` atualizada.
+3. O rebase reescreve os commits da branch, por isso o envio precisa sobrescrever a versão do servidor. `--force-with-lease` recusa o push se alguém tiver enviado commits à branch que você ainda não tem. O force push é permitido apenas em `task/<id>`, nunca na `dev` ou na `main`.
+
+??? question "O rebase parou com conflito"
+    O conflito ocorre quando a sua branch e a `dev` alteraram o mesmo trecho. O Git interrompe o rebase e lista os arquivos afetados.
+
+    1. Abra cada arquivo listado e escolha o conteúdo correto entre os marcadores `<<<<<<<` e `>>>>>>>`.
+    2. Marque os arquivos como resolvidos e continue:
+
+        ```bash title="Continuação do rebase"
+        git add <arquivo>
+        git rebase --continue
+        ```
+
+    3. Para desistir e voltar ao estado anterior ao rebase, use `git rebase --abort`.

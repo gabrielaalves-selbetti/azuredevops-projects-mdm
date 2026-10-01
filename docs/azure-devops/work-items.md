@@ -47,7 +47,7 @@ Regras, tabelas ou consumidores afetados. Use "Nenhum" se não houver.
 
 - **Critérios de aceitação** são o que o revisor e o homologador vão conferir. Escreva cada um de forma verificável. Na User Story, use o campo **Acceptance Criteria**; no Bug, a seção de critérios dentro de **Repro Steps**.
 - **Impacto nos dados** é obrigatório quando o work item altera uma regra do MDM.
-- Dependências entre work items usam o link **Predecessor/Successor**: o item bloqueado recebe o link **Predecessor** para o item que o bloqueia.
+- Dependências entre work items usam o link **Predecessor/Successor**. Se a tarefa B só pode começar depois da tarefa A, abra B e adicione um link do tipo **Predecessor** apontando para A.
 
 !!! danger "Dados pessoais"
     Nunca copie registros reais para o work item, para a **Discussion** ou para anexos. Use dados sintéticos ou mascarados.
@@ -81,10 +81,11 @@ Todo work item de tarefa é **filho** de uma **Entrega**. Tarefas maiores que **
       --fields "Microsoft.VSTS.Common.Priority=2" "Custom.Tamanho=S"   # (1)!
 
     az boards work-item relation add \
-      --id 123 --relation-type parent --target-id 120
+      --id 123 --relation-type parent --target-id 120   # (2)!
     ```
 
-    1. O nome de referência do campo customizado aparece em **Organization settings** → **Process** → **Fields**.
+    1. `$(cat descricao.md)` usa o conteúdo do arquivo `descricao.md` como descrição. O nome de referência do campo customizado aparece em **Organization settings** → **Process** → **Fields**.
+    2. Define a entrega `#120` como pai da tarefa `#123`. O ID da tarefa é retornado pelo comando anterior.
 
 ## Tags
 
