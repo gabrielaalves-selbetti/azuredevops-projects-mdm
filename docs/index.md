@@ -1,20 +1,20 @@
 <div class="hero" markdown>
 
-# Guia GitHub Projects
+# Guia Azure DevOps
 
-Padrões corporativos para planejar, executar e entregar a aplicação de MDM com o GitHub Projects. Um único fluxo, do registro da demanda até a entrega.
+Padrões corporativos para planejar, executar e entregar a aplicação de MDM com o Azure DevOps (Azure Boards e Azure Repos). Um único fluxo, do registro da demanda até a entrega.
 
 </div>
 
 ## Propósito
 
-Este guia padroniza **como a equipe organiza o trabalho no GitHub**. Ele não ensina a ferramenta: define convenções para que todos os Projects, issues e pull requests da organização sigam as mesmas regras.
+Este guia padroniza **como a equipe organiza o trabalho no Azure DevOps**. Ele não ensina a ferramenta: define convenções para que todos os projetos, work items e pull requests da organização sigam as mesmas regras.
 
 - Toda demanda é rastreável, do registro à entrega.
-- Cada status tem o mesmo significado em todos os quadros.
+- Cada estado tem o mesmo significado em todos os boards.
 - Revisão, homologação e entrega seguem um padrão único.
 
-O trabalho é organizado em **entregas**: conjuntos de issues com escopo e data alvo definidos.
+O trabalho é organizado em **entregas**: conjuntos de work items com escopo e data alvo definidos.
 
 ## Contexto: aplicação de MDM
 
@@ -30,7 +30,7 @@ Nesse contexto, cada mudança de regra altera os cadastros de toda a base. O gui
 
     ---
 
-    Propósito de cada recurso do GitHub e riscos específicos do MDM.
+    Propósito de cada recurso do Azure DevOps e riscos específicos do MDM.
 
     [Acessar](fundamentos.md)
 
@@ -38,17 +38,17 @@ Nesse contexto, cada mudança de regra altera os cadastros de toda a base. O gui
 
     ---
 
-    Etapas do quadro e princípios.
+    Etapas do board e princípios.
 
-    [Acessar](github-projects/index.md)
+    [Acessar](azure-devops/index.md)
 
--   :material-cog-outline: **Configuração do Project**
+-   :material-cog-outline: **Configuração do projeto**
 
     ---
 
-    Campos, views e checklist de configuração.
+    Processo, campos, board, queries e checklist.
 
-    [Acessar](github-projects/configuracao.md)
+    [Acessar](azure-devops/configuracao.md)
 
 -   :material-package-variant-closed: **Entregas**
 
@@ -56,9 +56,9 @@ Nesse contexto, cada mudança de regra altera os cadastros de toda a base. O gui
 
     Planejamento, acompanhamento e fechamento.
 
-    [Acessar](github-projects/entregas.md)
+    [Acessar](azure-devops/entregas.md)
 
 </div>
 
 !!! tip "Exemplo usado ao longo do guia"
-    Todas as páginas usam a mesma entrega fictícia: **Unificação de pessoas físicas** (issue `#120`), cuja primeira tarefa é **Validação de CPF na higienização** (issue `#123`), no repositório `minha-org/mdm-hub` e no Project **Dados - MDM** (número `7`).
+    Todas as páginas usam a mesma entrega fictícia: **Unificação de pessoas físicas** (work item `#120`), cuja primeira tarefa é **Validação de CPF na higienização** (work item `#123`), no repositório `mdm-hub` do projeto **Dados - MDM**, na organização `minha-org`.

@@ -1,6 +1,6 @@
-# Guia GitHub Projects
+# Guia Azure DevOps
 
-Guia de padronização do uso do **GitHub Projects** para a equipe que desenvolve a aplicação de MDM. Ele define convenções para registrar demandas, organizar o trabalho por entregas, desenvolver, revisar, homologar e entregar. O objetivo é previsibilidade e integração entre pessoas e tarefas.
+Guia de padronização do uso do **Azure DevOps** (Azure Boards e Azure Repos) para a equipe que desenvolve a aplicação de MDM. Ele define convenções para registrar demandas, organizar o trabalho por entregas, desenvolver, revisar, homologar e entregar. O objetivo é previsibilidade e integração entre pessoas e tarefas.
 
 O conteúdo é publicado como site estático com [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) no GitHub Pages.
 
@@ -9,8 +9,8 @@ O conteúdo é publicado como site estático com [MkDocs Material](https://squid
 | Seção | Conteúdo |
 | :--- | :--- |
 | Início | Propósito do guia e contexto MDM |
-| Fundamentos | Propósito de cada recurso do GitHub, riscos do MDM, estratégia de branches e dados pessoais |
-| GitHub Projects | Etapas do quadro, configuração do Project, entregas, issues, branches e commits e pull requests |
+| Fundamentos | Propósito de cada recurso do Azure DevOps, riscos do MDM, estratégia de branches e dados pessoais |
+| Azure DevOps | Etapas do board, configuração do projeto e do processo, entregas, work items, branches e commits e pull requests |
 
 ## Estrutura do repositório
 
@@ -18,10 +18,10 @@ O conteúdo é publicado como site estático com [MkDocs Material](https://squid
 .
 ├── docs/                      # Conteúdo do site (Markdown)
 │   ├── assets/                # CSS da identidade visual e favicon
-│   ├── github-projects/       # Seção principal do guia
+│   ├── azure-devops/          # Seção principal do guia
 │   └── index.md
 ├── resources/                 # Material de referência interno (não publicado)
-├── .agents/skills/            # Instruções para agentes de IA
+├── .claude/skills/            # Instruções para agentes de IA
 ├── .github/workflows/ci.yml   # Build e deploy no GitHub Pages
 ├── AGENTS.md                  # Orientações para agentes de IA
 ├── mkdocs.yml                 # Configuração do site e navegação
@@ -53,7 +53,7 @@ Cada push na `main` executa o workflow `.github/workflows/ci.yml`, que valida o 
 
 ## Como contribuir
 
-Este repositório segue o próprio guia:
+O site do guia é mantido neste repositório no GitHub, com os mesmos padrões de nome do guia:
 
 1. Abra uma issue `[Docs]` descrevendo a mudança.
 2. Crie a branch a partir da issue (`docs/<numero>-descricao`).

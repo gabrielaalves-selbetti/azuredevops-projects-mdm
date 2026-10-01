@@ -1,11 +1,11 @@
 ---
 name: mkdocs-docs
-description: Write or edit documentation in this repository under docs/. The site is the corporate GitHub Projects guide, built with mkdocs-material; navigation is declared in the `nav` section of mkdocs.yml. Use this skill whenever the user asks you to add, write, edit, restructure, or review any file under docs/ — including new pages, how-to guides, examples, and updates to the nav in mkdocs.yml. Trigger even when the user does not explicitly say "mkdocs" — any work that produces or modifies a Markdown file under docs/ should use this skill so the output uses admonitions (not `>` blockquotes for notes), omits manual tables of contents, follows the brand tone of voice, and takes advantage of mkdocs-material features (tabs, code annotations, mermaid, collapsible blocks, cards).
+description: Write or edit documentation in this repository under docs/. The site is the corporate Azure DevOps (Azure Boards and Azure Repos) guide, built with mkdocs-material; navigation is declared in the `nav` section of mkdocs.yml. Use this skill whenever the user asks you to add, write, edit, restructure, or review any file under docs/ — including new pages, how-to guides, examples, and updates to the nav in mkdocs.yml. Trigger even when the user does not explicitly say "mkdocs" — any work that produces or modifies a Markdown file under docs/ should use this skill so the output uses admonitions (not `>` blockquotes for notes), omits manual tables of contents, follows the brand tone of voice, and takes advantage of mkdocs-material features (tabs, code annotations, mermaid, collapsible blocks, cards).
 ---
 
-# Escrevendo páginas do Guia GitHub Projects (mkdocs-material)
+# Escrevendo páginas do Guia Azure DevOps (mkdocs-material)
 
-O site é gerado pelo `mkdocs-material` a partir do `mkdocs.yml` na raiz. A navegação fica na chave `nav` do próprio `mkdocs.yml`. O leitor vê um site com tema e recursos em JavaScript, não o Markdown cru do GitHub: escreva para esse formato.
+O site é gerado pelo `mkdocs-material` a partir do `mkdocs.yml` na raiz. A navegação fica na chave `nav` do próprio `mkdocs.yml`. O leitor vê um site com tema e recursos em JavaScript, não o Markdown cru do repositório: escreva para esse formato.
 
 Leia também o `AGENTS.md` na raiz, que traz as regras de conteúdo, o tom de voz e o exemplo contínuo.
 
@@ -21,7 +21,7 @@ Referências:
 5. **Não mova páginas existentes sem necessidade.** A URL deriva do caminho do arquivo. Ao renomear, atualize todos os links internos.
 6. **Páginas novas entram no `nav` do `mkdocs.yml`**, na seção adequada.
 7. **Um `#` por página** (título). Seções usam `##` e abaixo.
-8. **Português do Brasil.** Nomes de telas e botões do GitHub ficam em inglês e em negrito (**New project**).
+8. **Português do Brasil.** Nomes de telas, campos e botões do Azure DevOps ficam em inglês e em negrito (**New project**, **Publish**). Confira os nomes exatos nas skills `azure-boards` e `azure-repos`.
 
 ## Tom de voz
 
@@ -55,8 +55,8 @@ Tipos: `note`, `abstract`, `info`, `tip`, `success`, `question`, `warning`, `fai
 Sempre com linguagem. Use `title=` para caminhos de arquivo ou para descrever o bloco:
 
 ````markdown
-```yaml title=".github/ISSUE_TEMPLATE/feature.yml"
-name: Nova funcionalidade
+```markdown title=".azuredevops/pull_request_template.md"
+## O que foi feito?
 ```
 ````
 
@@ -66,25 +66,25 @@ Atributos úteis: `linenums="1"` e `hl_lines="2 4-6"`.
 
 ````markdown
 ```bash
-gh auth refresh -s project  # (1)!
+az repos pr create --draft --work-items 123  # (1)!
 ```
 
-1. Adiciona o escopo necessário para `gh project`.
+1. Vincula o work item `#123` ao pull request.
 ````
 
 ## Abas
 
-Use para "diferentes formas de fazer a mesma coisa". Mantenha os rótulos padrão do site, **"Interface web"** e **"gh CLI"**, para que a escolha persista entre páginas (`content.tabs.link`):
+Use para "diferentes formas de fazer a mesma coisa". Mantenha os rótulos padrão do site, **"Interface web"** e **"az CLI"**, para que a escolha persista entre páginas (`content.tabs.link`):
 
 ````markdown
 === "Interface web"
 
-    1. Acesse **Projects** → **New project**.
+    1. Página inicial da organização → **New project**.
 
-=== "gh CLI"
+=== "az CLI"
 
     ```bash
-    gh project create --owner minha-org --title "Dados - MDM"
+    az devops project create --name "Dados - MDM" --process "Agile MDM"
     ```
 ````
 
@@ -114,9 +114,9 @@ flowchart LR
 ```yaml
 nav:
   - Início: index.md
-  - GitHub Projects:
-      - github-projects/index.md          # usa o H1 da página como rótulo
-      - Issues: github-projects/issues.md
+  - Azure DevOps:
+      - azure-devops/index.md          # usa o H1 da página como rótulo
+      - Work items: azure-devops/work-items.md
 ```
 
 ## Convenções

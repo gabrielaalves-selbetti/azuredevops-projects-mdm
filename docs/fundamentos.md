@@ -1,6 +1,6 @@
 # Fundamentos
 
-Esta página explica **por que** a equipe usa o GitHub da forma definida neste guia. As regras das demais páginas partem daqui.
+Esta página explica **por que** a equipe usa o Azure DevOps da forma definida neste guia. As regras das demais páginas partem daqui.
 
 ## DevOps e DataOps
 
@@ -8,25 +8,25 @@ DevOps é uma cultura e um conjunto de práticas que aproxima o desenvolvimento 
 
 | Pilar | Significado | Como aparece neste guia |
 | :--- | :--- | :--- |
-| **Colaboração** | Objetivos comuns e trabalho visível para todos | Project único, issues e pull requests públicos para a equipe |
+| **Colaboração** | Objetivos comuns e trabalho visível para todos | Projeto único no Azure DevOps, work items e pull requests visíveis para a equipe |
 | **Automação** | Tarefas repetitivas executadas por máquina | Formatação e lint automáticos antes de cada commit (pre-commit) |
-| **Medição** | Decisões baseadas em dados do processo | Insights do Project, métricas de qualidade na homologação |
+| **Medição** | Decisões baseadas em dados do processo | Dashboards do time, métricas de qualidade na homologação |
 | **Compartilhamento** | Conhecimento registrado, não individual | Critérios de aceitação, code review, histórico de commits |
-| **Segurança** | Proteção desde o início do ciclo | Branch protegida, secrets, dados pessoais fora do repositório |
+| **Segurança** | Proteção desde o início do ciclo | Branch policies, segredos fora do código, dados pessoais fora do repositório |
 
 ## Propósito de cada recurso
 
-Cada recurso do GitHub resolve um problema específico. No MDM, o código define como os cadastros são padronizados, unificados e publicados. Por isso, cada mudança precisa ser rastreável até a decisão que a originou.
+Cada recurso do Azure DevOps resolve um problema específico. No MDM, o código define como os cadastros são padronizados, unificados e publicados. Por isso, cada mudança precisa ser rastreável até a decisão que a originou.
 
 | Recurso | Propósito | No MDM |
 | :--- | :--- | :--- |
-| **Repositório (Git)** | Guarda o código e todo o histórico de alterações. Permite comparar e reverter versões | Regras de higienização, passos de matching, regras de sobrevivência e DAGs do Airflow ficam versionados |
-| **Issue** | Registra uma demanda com contexto e critérios de aceitação | Documenta o motivo de uma mudança de regra: qual problema de cadastro ela resolve |
-| **Project** | Mostra o andamento de todas as issues em um só lugar | Visão das entregas do Hub MDM e do que está em revisão ou homologação |
+| **Repositório (Azure Repos)** | Guarda o código e todo o histórico de alterações. Permite comparar e reverter versões | Regras de higienização, passos de matching, regras de sobrevivência e DAGs do Airflow ficam versionados |
+| **Work item** | Registra uma demanda com contexto e critérios de aceitação | Documenta o motivo de uma mudança de regra: qual problema de cadastro ela resolve |
+| **Azure Boards** | Mostra o andamento de todos os work items em um só lugar, no board, no backlog e nas queries | Visão das entregas do Hub MDM e do que está em revisão ou homologação |
 | **Branch** | Isola uma mudança sem afetar o código principal | Uma nova regra é testada sem alterar a carga que está em produção |
 | **Commit** | Registra uma alteração pequena, com mensagem padronizada | O histórico mostra quando e por que uma nota de corte mudou |
 | **Pull request** | Propõe a integração de uma branch e concentra a revisão | Espaço para discutir o impacto da regra nos Golden Records antes do merge |
-| **Release e tag** | Marca uma versão publicada | Identifica qual versão das regras gerou cada carga |
+| **Tag** | Marca uma versão publicada | Identifica qual versão das regras gerou cada carga |
 
 !!! info "Referência"
     Os conceitos de DevOps, colaboração e integração contínua seguem o material [Fundamentos de DevOps](https://eduardo-da-silva.github.io/fundamentos-devops/).
@@ -46,38 +46,43 @@ Em uma aplicação comum, um erro costuma afetar uma tela ou uma funcionalidade.
 
 Esses riscos explicam três regras centrais do guia:
 
-- **Homologação antes do merge.** A `main` recebe apenas regras validadas com dados representativos. Veja [Homologação](github-projects/pull-requests.md#homologacao).
+- **Homologação antes da main.** A tarefa passa pela `dev`, onde é homologada com dados representativos. A `main` recebe apenas regras validadas. Veja [Homologação](azure-devops/pull-requests.md#homologacao).
 - **Pull requests pequenos.** Uma regra por pull request. Assim é possível medir o efeito de cada mudança isoladamente.
 - **Teste para cada bug.** Todo erro de regra corrigido ganha um teste de regressão, para não voltar.
 
 ## Estratégia de branches
 
-A equipe adota **branches curtas a partir da `main`**, integradas por pull request, com code review e homologação antes do merge.
+A equipe adota um modelo simples, com duas branches permanentes e uma branch curta por tarefa:
 
-| Estratégia | Como funciona | Por que não é o padrão |
-| :--- | :--- | :--- |
-| **GitFlow** | Branches permanentes `develop`, `release/` e `hotfix/` além da `main` | Mais branches para sincronizar. A homologação antes do merge já cumpre o papel da `release/` |
-| **Trunk-based** | Integração direta na principal várias vezes por dia | Exige homologação após o merge, incompatível com a validação de regras antes da publicação |
-| **Branch curta + PR** (padrão) | Uma branch por issue, integrada após revisão e homologação | — |
+| Branch | Papel |
+| :--- | :--- |
+| `main` | Código homologado. Origem das versões em produção |
+| `dev` | Integração e homologação. Recebe as tarefas revisadas |
+| `task/<id>` | Uma por work item. Nasce da `dev` e volta para ela por pull request |
 
-A divisão completa, com prefixos, ambientes e correções urgentes, está em [Divisão das branches](github-projects/branches-e-commits.md#divisao-das-branches).
+| Estratégia | Por que não é o padrão |
+| :--- | :--- |
+| **GitFlow** (`develop`, `release/`, `hotfix/`) | Mais branches para sincronizar. A `dev` já cumpre o papel de homologação |
+| **Trunk-based** | Integração direta na principal, sem uma etapa de homologação antes da produção |
 
+O fluxo completo está em [Fluxo de uma tarefa](azure-devops/branches-e-commits.md#fluxo-de-uma-tarefa).
 ## Dados pessoais
 
-O MDM trata dados pessoais protegidos pela LGPD. O repositório e o Project são lidos por toda a equipe e guardam o histórico para sempre.
+O MDM trata dados pessoais protegidos pela LGPD. O repositório e o Azure Boards são lidos por toda a equipe e guardam o histórico para sempre.
 
-!!! danger "Nunca registre dados reais no GitHub"
-    CPF, CNPJ, nomes, endereços, telefones e e-mails reais não entram em issues, comentários, pull requests, commits, testes ou logs anexados. Use dados sintéticos ou mascarados (ex.: `***.456.789-**`). Credenciais ficam em **secrets** ou em `.env` fora do Git.
+!!! danger "Nunca registre dados reais no Azure DevOps"
+    CPF, CNPJ, nomes, endereços, telefones e e-mails reais não entram em work items, comentários, anexos, pull requests, commits, testes ou logs anexados. Use dados sintéticos ou mascarados (ex.: `***.456.789-**`). Credenciais ficam em um cofre de segredos (ex.: Azure Key Vault) ou em `.env` fora do Git.
 
 ## Ciclo completo
 
 ```mermaid
 flowchart LR
-    I[Issue] --> B[Branch] --> C[Commits] --> PR[Pull request]
+    I[Work item] --> B["task/id"] --> C[Commits] --> PR[PR para a dev]
     PR --> R[Code review]
     R -->|ajustes| C
-    R -->|aprovado| H[Homologação]
+    R -->|aprovado| D[Merge na dev]
+    D --> H[Homologação]
     H -->|reprovado| C
-    H -->|aprovado| M[Merge na main]
-    M --> V[Release e imagem]
+    H -->|aprovado| M[PR dev → main]
+    M --> V[Tag e imagem]
 ```
